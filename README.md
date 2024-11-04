@@ -6,7 +6,7 @@ https://leetcode.com/u/LukeSolomon/
 https://neetcode.io/practice
 
 ## The Nitty Gritty:
-Data Structures
+### Data Structures
 ===============
   
 - [ ] Stack
@@ -27,8 +27,7 @@ Data Structures
 - [ ] Matrix-stored graphs
 - [ ] Reference-stored graphs
 
-
-Sorting Algorithms
+### Sorting Algorithms
 ==================
 
 - [ ] Selection Sort
