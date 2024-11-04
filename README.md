@@ -1,0 +1,2 @@
+# Leetcode
+For leetcode studying.
