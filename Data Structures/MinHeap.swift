@@ -1,84 +1,96 @@
 //
-//  MinHeap.swift
-//  
+//  Heap.swift
+//
 //
 //  Created by Luke Solomon on 11/11/24.
 //
 
 import Foundation
 
-// Implementing "Min Heap"
-class MinHeap {
+// Implementing Heap
+class Heap<T: Comparable> {
 
-  var arr: [Int] = [0]
-  var heapSize: Int
-  var realSize: Int
+  var arr: [T]
+  private var comparator: (_ a: T, _ b: T) -> Float
 
-  init(heapsize: Int, realSize: Int) {
-    self.heapSize = heapsize+1 // Will not use the 0th element of the array to better track indices!
-    self.realSize = realSize
+  init(comparator: @escaping (_ a: T, _ b: T) -> Float) {
+    self.comparator = comparator
+    self.arr = [T]()
   }
 
-  func addElement(_ element: Int) {
-    realSize += 1
-    if realSize > heapSize {
-      print("heap got too big")
-      realSize -= 1
+  func addElement(_ element: T) {
+    // push to the end of the array
+    // call helper function called "fix up"
+    arr.append(element)
+    fixUp(arr.count-1)
+  }
+
+  private func fixUp(_ index: Int) {
+    if index == 0 {
       return
     }
-
-    arr[realSize] = element
-    var index = realSize
-    var parent = index/2
-
-    while arr[index] < arr[parent] && index > 1 {
-      var temp = arr[index]
-      arr[index] = arr[parent]
-      arr[parent] = temp
-      index = parent
-      parent = index / 2
+    let parentIndex = (index-1)/2
+    if comparator(arr[parentIndex], arr[index]) > 0 {
+      swap(index, parentIndex)
+      fixUp(parentIndex)
     }
+  }
+
+  private func swap(_ firstIndex: Int, _ secondIndex: Int) {
+    let temp = arr[firstIndex]
+    arr[firstIndex] = arr[secondIndex]
+    arr[secondIndex] = temp
   }
 
   // Get the top element of the Heap
-  func peek() -> Int {
-    return minHeap[1];
+  func peek() -> T {
+    return arr[0];
   }
 
-  func pop() -> {
-    if realSize < 1 {
-      print("heap is empty")
-      return Int.Max
-    } else {
-      var removeElement = arr[1]
-      arr[1] = arr[realSize]
-      realSize -= 1
-      var index = 1
+  func pop() -> T? {
+    if arr.count == 1 {
+      return arr.popLast()
+    }
 
-      while index <= realSize/2 {
-        var left = index * 2
-        var right = index * 2 + 1
+    let temp = arr[0]
+    arr[0] = arr.popLast()!
+    fixDown(0)
+    return temp
+  }
 
-        if arr[index] > arr[left] || arr[index] > arr[right] {
+  private func fixDown(_ index: Int) {
+    // at a leaf
+    // only left
+    //   both children
+    //   left is bigger
+    //   right is bigger
 
-          if arr[left] < arr[right] {
-            var temp = arr[left]
-            arr[left] = arr[index]
-            arr[index] = temp
-            index = left
-          } else {
-            var temp = arr[right]
-            arr[right] = arr[index]
-            arr[index] = temp
-            index = right
-          }
+    let left = (index*2)+1
+    let right = left + 1
 
-        } else {
-          break
-        }
+    if left > arr.count-1 {
+      return
+    } else if right > arr.count-1 || comparator(arr[right], arr[left]) > 0 {
+      if comparator(arr[index], arr[left]) > 0 {
+        swap(index, left)
+        fixDown(left)
       }
-      return removeElement
+    } else if comparator(arr[index], arr[right]) > 0{
+      swap(index, right)
+      fixDown(right)
     }
   }
 
 }
+
+let comparator: (_ a: Int, _ b: Int) -> Float = {
+  return Float($1-$0)
+}
+
+let heap = Heap<Int>(comparator: comparator)
+
+heap.addElement(2)
+heap.addElement(3)
+heap.addElement(1)
+let _ = heap.pop()
+print(heap.arr)
