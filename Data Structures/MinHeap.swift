@@ -59,12 +59,6 @@ class Heap<T: Comparable> {
   }
 
   private func fixDown(_ index: Int) {
-    // at a leaf
-    // only left
-    //   both children
-    //   left is bigger
-    //   right is bigger
-
     let left = (index*2)+1
     let right = left + 1
 
@@ -75,7 +69,7 @@ class Heap<T: Comparable> {
         swap(index, left)
         fixDown(left)
       }
-    } else if comparator(arr[index], arr[right]) > 0{
+    } else if comparator(arr[index], arr[right]) > 0 {
       swap(index, right)
       fixDown(right)
     }
